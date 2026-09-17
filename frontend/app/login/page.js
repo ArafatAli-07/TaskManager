@@ -22,7 +22,7 @@ const Login = () => {
         e.preventDefault();
         // console.log(input);
         try {
-            const res = await axios.post(`https://taskmanager-et0d.onrender.com/api/v1/user/logout`, input,{
+            const res = await axios.post(`https://taskmanager-et0d.onrender.com/api/v1/user/login`, input,{
                 headers:{
                     'Content-Type':'application/json'
                 },
