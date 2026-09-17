@@ -1,6 +1,7 @@
 'use client'
 
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
@@ -9,6 +10,8 @@ const Main = () => {
   const [input, setInput] = useState({ title: '', description: '', dueDate: '' })
   const [selectedTask, setSelectedTask] = useState(null)
   const [editbutton, setEditbutton] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const resetForm = () => {
     setInput({ title: '', description: '', dueDate: '' })
@@ -17,10 +20,20 @@ const Main = () => {
   }
 
   const getTasks = async () => {
+    setLoading(true);
     try {
       const res = await axios.get('https://taskmanager-et0d.onrender.com/api/v1/task/all-tasks', { withCredentials: true })
       if (res.data.success) setTasks(res.data.tasks)
-    } catch (error) { toast.error(error?.response?.data?.message || 'Something went wrong') }
+    } catch (error) { 
+      if (error.response?.status === 401) {
+        toast.error('Session expired. Please login again.')
+        router.replace('/login')
+        return
+      }
+      toast.error(error?.response?.data?.message || 'Something went wrong') 
+    }finally{
+      setLoading(false);
+    }
   }
 
   const uploadTaskHandler = async (e) => {
@@ -28,24 +41,53 @@ const Main = () => {
     try {
       const res = await axios.post('https://taskmanager-et0d.onrender.com/api/v1/task/upload', input, { withCredentials: true })
       if (res.data.success) { toast.success(res.data.message); getTasks(); resetForm() }
-    } catch (error) { toast.error(error?.response?.data?.message || 'Something went wrong') }
+    } catch (error) { 
+      if (error.response?.status === 401) {
+        toast.error('Session expired. Please login again.')
+        router.replace('/login')
+        return
+      }
+      toast.error(error?.response?.data?.message || 'Something went wrong') 
+    }
   }
 
   const editTaskHandler = async () => {
     try {
       const res = await axios.put(`https://taskmanager-et0d.onrender.com/api/v1/task/${selectedTask._id}/edit-task`, input, { withCredentials: true })
       if (res.data.success) { toast.success(res.data.message); getTasks(); resetForm() }
-    } catch (error) { toast.error(error?.response?.data?.message || 'Something went wrong') }
+    } catch (error) { 
+      if (error.response?.status === 401) {
+        toast.error('Session expired. Please login again.')
+        router.replace('/login')
+        return
+      }
+      toast.error(error?.response?.data?.message || 'Something went wrong') 
+    }
   }
 
   const deleteTaskHandler = async (task) => {
     try {
       const res = await axios.get(`https://taskmanager-et0d.onrender.com/api/v1/task/${task._id}/delete-task`, { withCredentials: true })
       if (res.data.success) { toast.success(res.data.message); getTasks() }
-    } catch (error) { toast.error(error?.response?.data?.message || 'Something went wrong') }
+    } catch (error) { 
+      if (error.response?.status === 401) {
+        toast.error('Session expired. Please login again.')
+        router.replace('/login')
+        return
+      }
+      toast.error(error?.response?.data?.message || 'Something went wrong') 
+    }
   }
 
   useEffect(() => { getTasks() }, [])
+
+  if (loading) {
+     return (
+      <div className="w-screen h-screen fixed top-0 left-0 bg-black text-white flex justify-center items-center text-xl md:text-2xl z-50">
+        <p className="text-center">Checking Authentication...</p>
+      </div>
+    );
+  }
 
   return (
     <main className="min-h-screen w-full bg-slate-950 px-4 py-6 sm:px-6 md:px-8">
