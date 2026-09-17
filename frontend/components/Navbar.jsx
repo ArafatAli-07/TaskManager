@@ -11,7 +11,7 @@ const router = useRouter()
 
 const logoutHandler = async()=>{
   try {
-    const res = await axios.post(`http://localhost:8000/api/v1/user/logout`, {withCredentials:true});
+    const res = await axios.post(`https://taskmanager-et0d.onrender.com/api/v1/user/logout`, {withCredentials:true});
 
     if(res.data.success){
       localStorage.removeItem("token"),

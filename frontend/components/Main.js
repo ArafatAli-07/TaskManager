@@ -18,7 +18,7 @@ const Main = () => {
 
   const getTasks = async () => {
     try {
-      const res = await axios.get('http://localhost:8000/api/v1/task/all-tasks', { withCredentials: true })
+      const res = await axios.get('https://taskmanager-et0d.onrender.com/api/v1/task/all-tasks', { withCredentials: true })
       if (res.data.success) setTasks(res.data.tasks)
     } catch (error) { toast.error(error?.response?.data?.message || 'Something went wrong') }
   }
@@ -26,21 +26,21 @@ const Main = () => {
   const uploadTaskHandler = async (e) => {
     e.preventDefault()
     try {
-      const res = await axios.post('http://localhost:8000/api/v1/task/upload', input, { withCredentials: true })
+      const res = await axios.post('https://taskmanager-et0d.onrender.com/api/v1/task/upload', input, { withCredentials: true })
       if (res.data.success) { toast.success(res.data.message); getTasks(); resetForm() }
     } catch (error) { toast.error(error?.response?.data?.message || 'Something went wrong') }
   }
 
   const editTaskHandler = async () => {
     try {
-      const res = await axios.put(`http://localhost:8000/api/v1/task/${selectedTask._id}/edit-task`, input, { withCredentials: true })
+      const res = await axios.put(`https://taskmanager-et0d.onrender.com/api/v1/task/${selectedTask._id}/edit-task`, input, { withCredentials: true })
       if (res.data.success) { toast.success(res.data.message); getTasks(); resetForm() }
     } catch (error) { toast.error(error?.response?.data?.message || 'Something went wrong') }
   }
 
   const deleteTaskHandler = async (task) => {
     try {
-      const res = await axios.get(`http://localhost:8000/api/v1/task/${task._id}/delete-task`, { withCredentials: true })
+      const res = await axios.get(`https://taskmanager-et0d.onrender.com/api/v1/task/${task._id}/delete-task`, { withCredentials: true })
       if (res.data.success) { toast.success(res.data.message); getTasks() }
     } catch (error) { toast.error(error?.response?.data?.message || 'Something went wrong') }
   }
