@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true }));
 const corsOption = {
-  origin: ['task-manager-arafat-ali1.vercel.app'],
+  origin: "https://task-manager-arafat-ali1.vercel.app",
   credentials: true
 };
 app.use(cors(corsOption));
